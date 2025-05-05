@@ -1,0 +1,65 @@
+.rrhh-home-container {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rrhh-home-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.rrhh-home-header h1 {
+  font-size: 2rem;
+  color: #2a4d69;
+  margin-bottom: 0.5rem;
+}
+
+.rrhh-home-header p {
+  font-size: 1rem;
+  color: #4b6584;
+}
+
+.rrhh-home-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.rrhh-home-content h2 {
+  font-size: 1.5rem;
+  color: #1e272e;
+  margin-bottom: 1rem;
+}
+
+.rrhh-home-content p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rrhh-home-button {
+  background-color: #2a4d69;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.rrhh-home-button:hover {
+  background-color: #1e3550;
+}
+
+.rrhh-home-footer {
+  text-align: center;
+  padding-top: 2rem;
+  font-size: 0.875rem;
+  color: #7f8c8d;
+}
