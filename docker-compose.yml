@@ -1,0 +1,138 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"  # Vite usa el puerto 5173 por defecto
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://orquestador:5000
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - arca_network
+    depends_on:
+      - orquestador
+
+  orquestador:
+    build: ./orquestador
+    ports:
+      - "5000:5000"
+    environment:
+      PERSONAL_MS_URL: http://personal-ms:3001
+      VACACIONES_MS_URL: http://vacaciones-ms:3002
+      CONTRATOS_MS_URL: http://contratos-ms:3003
+      PAGOS_MS_URL: http://pagos-ms:3004
+    networks:
+      - arca_network
+    depends_on:
+      - postgres
+      - personal-ms
+      - vacaciones-ms
+      - contratos-ms
+      - pagos-ms
+
+  personal-ms:
+    build: ./microservicios/personal-ms
+    ports:
+      - "3001:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: 'admin'
+      DB_NAME: 'arca_gestor'
+    networks:
+      - arca_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  vacaciones-ms:
+    build: ./microservicios/vacaciones-ms
+    ports:
+      - "3002:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: 'admin'
+      DB_NAME: 'arca_gestor'
+    networks:
+      - arca_network
+    depends_on:
+      - postgres
+
+  contratos-ms:
+    build: ./microservicios/contratos-ms
+    ports:
+      - "3003:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: 'admin'
+      DB_NAME: 'arca_gestor'
+    networks:
+      - arca_network
+    depends_on:
+      - postgres
+
+  pagos-ms:
+    build: ./microservicios/pagos-ms
+    ports:
+      - "3004:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: 'admin'
+      DB_NAME: 'arca_gestor'
+    networks:
+      - arca_network
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: arca_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 'admin'
+      POSTGRES_DB: 'arca_gestor'
+    volumes:
+      - arca_pgdata:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d  # Opcional para scripts SQL iniciales
+    networks:
+      - arca_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d arca_gestor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@arca.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    networks:
+      - arca_network
+
+volumes:
+  arca_pgdata:
+
+networks:
+  arca_network:
+    driver: bridge
