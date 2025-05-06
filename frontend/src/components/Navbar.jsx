@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png"; // Asegúrate que esta ruta sea válida
 import "./NavBar.css";
 
 function NavBar() {
