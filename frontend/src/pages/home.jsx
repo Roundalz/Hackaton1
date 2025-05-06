@@ -1,4 +1,5 @@
 import React from 'react';
+import './home.css'; // Asegúrate de que la ruta sea correcta
 
 const Home = () => {
   return (
