@@ -17,3 +17,4 @@ export const Cargo = sequelize.define('Cargo', {
 
 Area.hasMany(Cargo, { foreignKey: 'id_area', onDelete: 'CASCADE' });
 Cargo.belongsTo(Area, { foreignKey: 'id_area' });
+

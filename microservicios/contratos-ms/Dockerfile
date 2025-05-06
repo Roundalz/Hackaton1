@@ -1,6 +1,7 @@
 FROM node:18
 WORKDIR /app
 COPY package.json package-lock.json ./
+RUN npm install esm
 RUN npm install
 RUN npm install exceljs
 COPY . .
